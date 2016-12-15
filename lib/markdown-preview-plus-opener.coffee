@@ -28,8 +28,9 @@ module.exports = MarkdownPreviewPlusOpener =
       if not previewPane
         atom.commands.dispatch workspaceView, 'markdown-preview-plus:toggle'
         if atom.config.get('markdown-preview-plus-opener.closePreviewWhenClosingEditor')
-          event.item.onDidDestroy ->
-            for pane in atom.workspace.getPanes()
-              for item in pane.items when item.getURI() is previewUrl
-                pane.destroyItem(item)
-                break
+          if event.item.onDidDestroy
+            event.item.onDidDestroy ->
+              for pane in atom.workspace.getPanes()
+                for item in pane.items when item.getURI() is previewUrl
+                  pane.destroyItem(item)
+                  break
